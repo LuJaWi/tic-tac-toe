@@ -1,0 +1,18 @@
+.game-square {
+  height: 5vh;
+  width: 5vh;
+  box-sizing: border-box;
+  border: solid 2px;
+}
+
+.game-square:hover {
+  background-color: lightgray;
+}
+
+.gameboard {
+  height: 15vh;
+  width: 15vh;
+  display: flex;
+  flex-wrap: wrap;
+  border: 5px solid;
+}
