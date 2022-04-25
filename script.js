@@ -1,17 +1,21 @@
-// Objects: Game board, players
+// Objects: Game board
 
-const Player = (name) => {
-    const showName = () => name;
-    winCount = 0;
-    marker = '';
-    isPlayerTurn = false
-    return {showName, marker, winCount, isPlayerTurn}
+const Game = () => {
+    const Player = (name, marker) => {
+        const showName = () => name;
+        winCount = 0;
+        marker = marker;
+        isPlayerTurn = false
+        return {showName, marker, winCount, isPlayerTurn}
+    }
+
+    player1 = Player(prompt("Player 1 Name:"), "X")
+    player2 = Player(prompt("Player 2 Name:"), "O")
+
+    return{player1, player2}
 }
 
-player1 = Player("Luke");
-player2 = Player("Maeve");
 
-console.log(player1.showName())
 
 const Gameboard = (() => {
     let gameArray = [
@@ -75,5 +79,5 @@ const Gameboard = (() => {
     
     initializeEventListeners()
 
-    return {gameArray, makeMove, clearBoard, checkWin}
+    return {gameArray, makeMove, clearBoard}
 })()
