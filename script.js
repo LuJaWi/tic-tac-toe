@@ -35,12 +35,25 @@ const Game = () => {
                 // Marker is called from playerTurn object (which is a copy of 
                 // either of the player objects)
                 Gameboard.makeMove(playerTurn.marker, square.id)
+                // Check Win Status
+                console.log("Win status: " + Gameboard.checkWin(playerTurn.marker));
+                // Display win message if checkWin returns true
+                if (Gameboard.checkWin(playerTurn.marker)) {
+                    document.querySelector(".win-message").classList.remove("hidden");
+                    document.querySelector(".win-message").innerText = playerTurn.marker + " Wins!"
+                } if (Gameboard.checkDraw(player1.marker, player2.marker)) {
+                    document.querySelector(".draw-message").classList.remove("hidden");
+                }
                 switchTurn() // Switch player turn after every move
             }
         })
     })
 
-    return{playerTurn}
+    document.querySelector(".new-game").addEventListener('click', () => {
+        Game()
+    })
+
+    return{}
 }
 
 
@@ -59,7 +72,6 @@ const Gameboard = (() => {
     const makeMove = (marker, index) => {
         gameArray[index] = marker
         document.getElementById(String(index)).innerText = gameArray[index]
-        console.log("Win status: " + checkWin(marker));
     }
 
     const clearBoard = () => {
@@ -68,27 +80,46 @@ const Gameboard = (() => {
             ' ',' ',' ',
             ' ',' ',' '
         ]
+        document.querySelector(".win-message").classList.add("hidden");
+        document.querySelector(".draw-message").classList.add("hidden");
         updateBoard();
     }
 
+
     // Function to check if anyone has won yet
     const checkWin = (marker) => {
-        if ( // Verticals
-            gameArray[0] + gameArray[3] + gameArray[6] == marker + marker + marker ||
-            gameArray[1] + gameArray[4] + gameArray[7] == marker + marker + marker ||
-            gameArray[2] + gameArray[5] + gameArray[8] == marker + marker + marker
-        ) {
-            return true
-        } else if ( // Horizontals
-            gameArray[0] + gameArray[1] + gameArray[2] == marker + marker + marker ||
-            gameArray[3] + gameArray[4] + gameArray[5] == marker + marker + marker ||
-            gameArray[6] + gameArray[7] + gameArray[8] == marker + marker + marker
-        ) {
-            return true
-        } else if ( // Diagonals
-            gameArray[0] + gameArray[4] + gameArray[8] == marker + marker + marker ||
-            gameArray[2] + gameArray[4] + gameArray[6] == marker + marker + marker
-        ) {
+        winArrays = [
+            [0,3,6], // Verticals
+            [1,4,7],
+            [2,5,8],
+            [0,1,2], // Horizontals
+            [3,4,5],
+            [6,7,8],
+            [0,4,8], // Diagonals
+            [2,4,6],
+        ]
+
+        for (let i = 0; i < 8; i++) {
+            let testString = ''
+            for (let j = 0; j < 3; j++) {
+                testString += gameArray[winArrays[i][j]]
+            }
+            if (testString == marker.repeat(3)) {
+                markWin(winArrays[i]);
+                return true
+            }
+        } return false
+    }
+
+    const checkDraw = (marker1, marker2) => {
+        if (checkWin(marker1) || checkWin(marker2)) {return false}
+        let checkString = '';
+        for (square in gameArray) {
+            if (gameArray[square] != ' ') {
+            checkString += gameArray[square]
+            }
+        }
+        if (checkString.length == 9) {
             return true
         } else {
             return false
@@ -96,7 +127,7 @@ const Gameboard = (() => {
     }
     
 
-    return {gameArray, makeMove, clearBoard}
+    return {gameArray, makeMove, clearBoard, checkWin, checkDraw}
 })()
 
 Game()

@@ -22,5 +22,26 @@
   width: 300px;
   display: flex;
   flex-wrap: wrap;
+}
 
+.win-message {
+  position: fixed;
+  height: 300px;
+  width: 300px;
+  background-color: rgba(29, 167, 38, 0.5);
+}
+
+.win-highlight {
+  background-color: rgba(29, 167, 38, 0.5);
+}
+
+.draw-message {
+  position: fixed;
+  height: 300px;
+  width: 300px;
+  background-color: rgba(50, 50, 50, 0.5);
+}
+
+.hidden {
+  display: none;
 }
