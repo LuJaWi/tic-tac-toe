@@ -88,27 +88,36 @@ const Gameboard = (() => {
 
     // Function to check if anyone has won yet
     const checkWin = (marker) => {
+        // If all markers in a winArray sub array are the same, that marker has won.
         winArrays = [
             [0,3,6], // Verticals
             [1,4,7],
             [2,5,8],
+
             [0,1,2], // Horizontals
             [3,4,5],
             [6,7,8],
+
             [0,4,8], // Diagonals
             [2,4,6],
         ]
 
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) { // iterate through arrays
             let testString = ''
-            for (let j = 0; j < 3; j++) {
-                testString += gameArray[winArrays[i][j]]
+            for (let j = 0; j < 3; j++) { // iterate through individual array
+                testString += gameArray[winArrays[i][j]] // Build a string to compare against win conditions
             }
             if (testString == marker.repeat(3)) {
-                markWin(winArrays[i]);
+                markWin(winArrays[i]); // pass winning array to function to mark winning moves
                 return true
             }
         } return false
+    }
+
+    const markWin = (winningArray) => {
+        for (square in winningArray) {
+            document.getElementById(String(winningArray[square])).classList.add('win-highlight');
+        }
     }
 
     const checkDraw = (marker1, marker2) => {
