@@ -1,18 +1,46 @@
 // Objects: Game board
 
 const Game = () => {
+    // Create player object factory within game object (can't have a game without players)
     const Player = (name, marker) => {
-        const showName = () => name;
+        marker = marker
         winCount = 0;
-        marker = marker;
-        isPlayerTurn = false
-        return {showName, marker, winCount, isPlayerTurn}
+        return {marker, winCount}
     }
 
-    player1 = Player(prompt("Player 1 Name:"), "X")
-    player2 = Player(prompt("Player 2 Name:"), "O")
+    // Create 2 player objects
+    player1 = Player("player1", "X")
+    player2 = Player("player2", "O")
 
-    return{player1, player2}
+    // Start with clear game board
+    Gameboard.clearBoard()
+
+    // playerTurn acts as proxy object for the active player
+    playerTurn = player1 // Player 1 starts by default
+
+    // function for switching player turn
+    const switchTurn = () => {
+        if (playerTurn == player1) {
+            playerTurn = player2
+        } else if (playerTurn == player2) {
+            playerTurn = player1
+        }
+    }
+
+    // Create event listeners for playing the game
+    document.querySelectorAll(".game-square").forEach(square => {
+        square.addEventListener('click', () => {
+            // Prevent changing already chosen squares
+            if (square.innerText != 'X' && square.innerText != "O") {
+                // Marker is called from playerTurn object (which is a copy of 
+                // either of the player objects)
+                Gameboard.makeMove(playerTurn.marker, square.id)
+                switchTurn() // Switch player turn after every move
+            }
+        })
+    })
+
+    return{playerTurn}
 }
 
 
@@ -26,7 +54,6 @@ const Gameboard = (() => {
     const updateBoard = () => {
         for (let i = 0; i < 9; i++)
         document.getElementById(String(i)).innerText = gameArray[i]
-        initializeEventListeners()
     }
 
     const makeMove = (marker, index) => {
@@ -42,14 +69,6 @@ const Gameboard = (() => {
             ' ',' ',' '
         ]
         updateBoard();
-    }
-
-    const initializeEventListeners = () => {
-        document.querySelectorAll(".game-square").forEach(square => {
-            square.addEventListener('click', () => {
-                makeMove('X', square.id)
-            })
-        })
     }
 
     // Function to check if anyone has won yet
@@ -76,7 +95,8 @@ const Gameboard = (() => {
         }
     }
     
-    initializeEventListeners()
 
     return {gameArray, makeMove, clearBoard}
 })()
+
+Game()
